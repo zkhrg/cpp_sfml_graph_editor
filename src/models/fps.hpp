@@ -2,6 +2,7 @@
 
 #pragma once
 
+namespace App {
 class FPS {
  public:
   FPS() : mFrame(0), mFps(0) {}
@@ -24,4 +25,4 @@ class FPS {
     ++mFrame;
   }
 };
-#endif
+}  // namespace App

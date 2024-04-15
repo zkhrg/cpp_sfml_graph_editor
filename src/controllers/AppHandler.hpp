@@ -1,17 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "../models/fps.hpp"
+
 namespace App {
 class EventHandler {
  public:
   EventHandler(sf::RenderWindow& w) : _w(w) {}
   void Handle(sf::Event& event) {
-    if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left) {
-      // Получаем позицию курсора мыши относительно окна
-      sf::Vector2i mousePosition = sf::Mouse::getPosition(_w);
-      std::cout << "Mouse position: " << mousePosition.x << ", "
-                << mousePosition.y << std::endl;
+    switch (event.type) {
+      case sf::Event::MouseButtonPressed:
+        if (event.mouseButton.button == sf::Mouse::Left) {
+          std::cout << "left mouse button pressed!" << std::endl;
+        }
     }
   }
 
