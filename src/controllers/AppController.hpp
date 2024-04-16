@@ -3,35 +3,48 @@
 #include <SFML/Graphics.hpp>
 
 #include "../models/AppModel.hpp"
+#include "../models/AppScene.hpp"
 #include "../views/AppView.hpp"
 #include "AppHandler.hpp"
 
 namespace App {
 class AppLoop {
  public:
-  AppLoop(sf::RenderWindow& w) : _w(w), _eh(w), _fps() {}
+  AppLoop(sf::RenderWindow& w)
+      : _window(w), _scene(), _event_handler(_scene, w), _fps() {}
   void Start() {
-    while (_w.isOpen()) {
-      for (sf::Event event{}; _w.pollEvent(event);) {
+    while (_window.isOpen()) {
+      for (sf::Event event{}; _window.pollEvent(event);) {
         if (event.type == sf::Event::Closed) {
-          _w.close();
+          _window.close();
         }
-        _eh.Handle(event);
+        _event_handler.Handle(event);
       }
       Update();
-      _w.clear();
-      _w.display();
     }
   }
 
   void Update() {
+    _window.clear();
+    // TODO: separate logic module for this
     _fps.update();
-    _w.setTitle(std::to_string(_fps.getFPS()));
+    //-----------------------------------------------
+    std::unordered_map<int, sf::CircleShape>::iterator it =
+        _scene._elements.begin();
+    while (it != _scene._elements.end()) {
+      _window.draw(it->second);
+      it++;
+    }
+    //-----------------------------------------------
+    _window.setTitle(std::to_string(_fps.getFPS()));
+    // END TODO
+    _window.display();
   }
 
  private:
-  sf::RenderWindow& _w;
-  App::EventHandler _eh;
+  sf::RenderWindow& _window;
+  App::EventHandler _event_handler;
   App::FPS _fps;
+  App::Scene _scene;
 };
 }  // namespace App
